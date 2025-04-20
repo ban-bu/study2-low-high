@@ -35,7 +35,7 @@ GPT4O_MINI_BASE_URL = "https://api.deepbricks.ai/v1/"
 from svg_utils import convert_svg_to_png
 
 # 设置默认生成的关键词数量，取代UI上的选择按钮
-DEFAULT_KEYWORD_COUNT = 5  # 可以设置为1, 5, 10，分别对应原来的low, medium, high
+DEFAULT_KEYWORD_COUNT = 10  # 可以设置为1, 5, 10，分别对应原来的low, medium, high
 
 def get_ai_design_suggestions(user_preferences=None):
     """Get design suggestions from GPT-4o-mini with more personalized features"""
@@ -668,21 +668,17 @@ def show_high_recommendation_with_explanation():
     # 下载按钮 (在主区域底部)
     if st.session_state.final_design is not None:
         st.markdown("---")
-        download_col, next_col = st.columns(2)
+        # 移除两列布局
+        # download_col, next_col = st.columns(2)
         
-        with download_col:
-            buf = BytesIO()
-            st.session_state.final_design.save(buf, format="PNG")
-            buf.seek(0)
-            st.download_button(
-                label="💾 Download Design",
-                data=buf,
-                file_name="ai_tshirt_design.png",
-                mime="image/png"
-            )
-        
-        with next_col:
-            # 确认完成按钮
-            if st.button("✅ Confirm"):
-                st.session_state.page = "survey"
-                st.rerun()
+        # 直接显示下载按钮，不使用列布局
+        buf = BytesIO()
+        st.session_state.final_design.save(buf, format="PNG")
+        buf.seek(0)
+        st.download_button(
+            label="💾 下载设计图",
+            data=buf,
+            file_name="ai_tshirt_design.png",
+            mime="image/png",
+            use_container_width=True  # 使按钮占据整个宽度
+        )
